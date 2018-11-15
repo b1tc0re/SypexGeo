@@ -1,0 +1,12 @@
+{
+  "name": "b1tc0re/SypexGeo",
+  "description": "Определение местонахождения с помощью http://sypexgeo.net/",
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "b1tc0re",
+      "email": "b1tc0re@yandex.ru"
+    }
+  ]
+}
