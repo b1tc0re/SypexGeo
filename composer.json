@@ -8,5 +8,8 @@
       "name": "b1tc0re",
       "email": "b1tc0re@yandex.ru"
     }
-  ]
+  ],
+  "require": {
+    "dsergey/sypex-geo": "dev-master"
+  }
 }

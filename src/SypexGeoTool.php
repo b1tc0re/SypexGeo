@@ -1,6 +1,5 @@
 <?php namespace DeftCMS\Components\SypexGeo;
 
-use DeftCMS\Components\GeoTools\SxGeoApi;
 use DeftCMS\Engine;
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -19,7 +18,7 @@ class SypexGeoTool
 
     /**
      * API
-     * @var SxGeoApi
+     * @var \SxGeo
      */
     private $_SxGeo;
 
@@ -30,7 +29,7 @@ class SypexGeoTool
     {
         Engine::$DT->load->config('sypex.geo');
         Engine::$DT->load->library('user_agent');
-        $this->_SxGeo = new SxGeoApi(Engine::$DT->config->item('sx.database_path'));
+        $this->_SxGeo = new \SxGeo(Engine::$DT->config->item('sx.database_path'));
     }
 
     /**
