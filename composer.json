@@ -1,5 +1,5 @@
 {
-  "name": "b1tc0re/SypexGeo",
+  "name": "b1tc0re/sypex-geo",
   "description": "Определение местонахождения с помощью http://sypexgeo.net/",
   "minimum-stability": "stable",
   "license": "proprietary",
