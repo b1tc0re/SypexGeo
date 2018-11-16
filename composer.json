@@ -1,7 +1,6 @@
 {
   "name": "b1tc0re/sypex-geo",
   "description": "Определение местонахождения с помощью http://sypexgeo.net/",
-  "minimum-stability": "stable",
   "license": "proprietary",
   "authors": [
     {
@@ -9,6 +8,7 @@
       "email": "b1tc0re@yandex.ru"
     }
   ],
+  "minimum-stability": "dev",
   "require": {
     "dsergey/sypex-geo": "dev-master",
     "php": ">=7.0.0"
