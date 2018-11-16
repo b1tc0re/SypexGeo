@@ -1,4 +1,4 @@
-<?php namespace DeftCMS\Components\SypexGeo;
+<?php namespace DeftCMS\Components\b1tc0re\SypexGeo;
 
 use DeftCMS\Engine;
 
