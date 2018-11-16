@@ -23,6 +23,11 @@ class SypexGeoTool
     private $_SxGeo;
 
     /**
+     * @var SypexGeoTool
+     */
+    private static $instance;
+
+    /**
      * SypexGeoTool constructor.
      */
     public function __construct()
@@ -56,5 +61,19 @@ class SypexGeoTool
         $ip !== null or $ip = Engine::$DT->input->ip_address();
         $data = $this->_SxGeo->getCityFull($ip);
         return empty($data) ? Engine::$DT->config->get('sx.default_location', array()) : $data;
+    }
+
+    /**
+     * Get location information by client ip address
+     * @return array
+     */
+    public static function staticGetByClientIpAddress()
+    {
+        if( !self::$instance )
+        {
+            self::$instance = new SypexGeoTool();
+        }
+
+        return self::$instance->getByClientIpAddress();
     }
 }
