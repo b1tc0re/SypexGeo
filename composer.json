@@ -10,6 +10,7 @@
     }
   ],
   "require": {
-    "dsergey/sypex-geo": "dev-master"
+    "dsergey/sypex-geo": "dev-master",
+    "php": ">=7.0.0"
   }
 }
