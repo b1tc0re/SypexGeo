@@ -15,7 +15,7 @@
   },
   "autoload": {
     "psr-4": {
-      "": "src/"
+      "DeftCMS\\Components\\b1tc0re\\SypexGeo\\": "src/"
     }
   }
 }
