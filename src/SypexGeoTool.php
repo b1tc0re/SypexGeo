@@ -1,8 +1,10 @@
 <?php namespace DeftCMS\Components\b1tc0re\SypexGeo;
 
-use DeftCMS\Engine;
+use GuzzleHttp\Exception\GuzzleException;
+use PhpZip\Exception\ZipException;
+use RuntimeException;
 
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') || exit('No direct script access allowed');
 
 /**
  * DeftCMS      Get full geo info by remote IP-address
@@ -10,11 +12,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @package	    DeftCMS
  * @category	Libraries
  * @author	    b1tc0re
- * @copyright   (c) 2018, DeftCMS (http://deftcms.org)
- * @since	    Version 0.0.1
+ * @copyright   (c) 2018-2022, DeftCMS (http://deftcms.ru/)
+ * @since	    Version 0.0.9a
  */
 class SypexGeoTool
 {
+    /**
+     * Путь к файлам загрузкии
+     */
+    const DOWNLOAD_URL = 'files/SxGeoCity_utf8.zip';
 
     /**
      * API
@@ -23,57 +29,89 @@ class SypexGeoTool
     private $_SxGeo;
 
     /**
-     * @var SypexGeoTool
-     */
-    private static $instance;
-
-    /**
      * SypexGeoTool constructor.
      */
     public function __construct()
     {
-        Engine::$DT->load->config('sypex.geo');
-        Engine::$DT->load->library('user_agent');
-        $this->_SxGeo = new \SxGeo(Engine::$DT->config->item('sx.database_path'));
-    }
+        $databasePath = __DIR__ . '/files/SxGeoCity.dat';
 
-    /**
-     * Get location information by client ip address
-     * @return array
-     */
-    public function getByClientIpAddress()
-    {
-        if (Engine::$DT->agent->is_robot())
+        if( class_exists('DeftCMS\Engine', false) )
         {
-            return Engine::$DT->config->get('sx.default_location', array());
+            $databasePath = Engine::$DT->config->item('sx.database_path');
         }
 
-        return $this->getGeoData(Engine::$DT->input->ip_address());
+        $this->_SxGeo = new \SxGeo($this->getDataBasePath($databasePath));
     }
 
     /**
-     * Locate by ip address
-     * @param null|string $ip IP address for locating
+     * @param string|array $ipaddress
      * @return array
      */
-    private function getGeoData($ip = null)
+    public function get($ipaddress)
     {
-        $ip !== null or $ip = Engine::$DT->input->ip_address();
-        $data = $this->_SxGeo->getCityFull($ip);
-        return empty($data) ? Engine::$DT->config->get('sx.default_location', array()) : $data;
-    }
-
-    /**
-     * Get location information by client ip address
-     * @return array
-     */
-    public static function staticGetByClientIpAddress()
-    {
-        if( !self::$instance )
-        {
-            self::$instance = new SypexGeoTool();
+        if( !is_array($ipaddress) ) {
+            $ipaddress = [ $ipaddress ];
         }
 
-        return self::$instance->getByClientIpAddress();
+        $result = [];
+
+        foreach ($ipaddress as $_) {
+
+            if( $data = $this->_SxGeo->getCityFull($_) ) {
+                $result[] = $data;
+            }
+
+        }
+
+        return $result;
+    }
+
+    /**
+     * Получить путь к файлам базы данных
+     * @param string $databasePath - Путь к базе данных
+     * @return string
+     *
+     * @throws GuzzleException
+     * @throws ZipException
+     */
+    private function getDataBasePath($databasePath)
+    {
+        if( $databasePath === null || !file_exists($databasePath) )
+        {
+            $databasePath = $this->download($databasePath);
+        }
+
+        return $databasePath;
+    }
+
+    /**
+     * Загрузить базы данных для работы с SxGeo
+     *
+     * @param string $databasePath
+     *
+     * @return string
+     * @throws GuzzleException
+     * @throws ZipException
+     * @throws RuntimeException
+     */
+    private function download($databasePath)
+    {
+        $client = new SypexRequest();
+        $tmpSxZip = tempnam(sys_get_temp_dir(), "sx_");
+
+        $client->download(self::DOWNLOAD_URL, $tmpSxZip);
+
+        $zipFile = new \PhpZip\ZipFile();
+        $zipFile->openFile($tmpSxZip);
+
+        $path = pathinfo($databasePath, PATHINFO_DIRNAME);
+
+        if( !is_dir($path) && !mkdir($path, 0777) && !is_dir($path)) {
+            throw new \RuntimeException(sprintf('Directory "%s" was not created', $path));
+        }
+
+        $zipFile->extractTo($path, [ 'SxGeoCity.dat' ]);
+
+        return $databasePath;
     }
 }
