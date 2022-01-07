@@ -1,14 +1,14 @@
 {
   "name": "b1tc0re/sypex-geo",
   "description": "Определение местонахождения с помощью http://sypexgeo.net/",
-  "license": "proprietary",
+  "minimum-stability": "dev",
+  "license": "MIT",
   "authors": [
     {
       "name": "b1tc0re",
       "email": "b1tc0re@yandex.ru"
     }
   ],
-  "minimum-stability": "dev",
   "require": {
     "dsergey/sypex-geo": "dev-master",
     "b1tc0re/request-client": "dev-master",

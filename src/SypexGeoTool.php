@@ -65,9 +65,9 @@ class SypexGeoTool
 
         if( class_exists('DeftCMS\Engine', false) )
         {
-            $databasePath = \Engine::$DT->config->item('cms.sx.database_path');
+            $databasePath = \DeftCMS\Engine::$DT->config->item('cms.sx.database_path');
 
-            if( $default = \Engine::$DT->config->item('cms.sx.default_location') )
+            if( $default = \DeftCMS\Engine::$DT->config->item('cms.sx.default_location') )
             {
                 $this->defaultCity = $default;
             }
@@ -77,6 +77,8 @@ class SypexGeoTool
     }
 
     /**
+     * Данные о ip-адрессе
+     *
      * @param string|array $ipaddress
      * @return array
      */
