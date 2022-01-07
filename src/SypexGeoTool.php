@@ -23,6 +23,34 @@ class SypexGeoTool
     const DOWNLOAD_URL = 'files/SxGeoCity_utf8.zip';
 
     /**
+     * Если не найдены данные по ip-адрессу вернуть этот масив
+     * @var array
+     */
+    private $defaultCity = [
+        'city'      => [
+            'id'        => 498817,
+            'lat'       => 59.93863,
+            'lon'       => 30.31413,
+            'name_ru'   => 'Санкт-Петербург',
+            'name_en'   => 'Saint Petersburg',
+        ],
+        'region'    => [
+            'id'        => 536203,
+            'name_ru'   => 'Санкт-Петербург',
+            'name_en'   => 'Saint Petersburg',
+            'iso'       => 'RU-SPE',
+        ],
+        'country'   => [
+            'id'        => 185,
+            'iso'       => 'RU',
+            'lat'       => 60,
+            'lon'       => 100,
+            'name_ru'   => 'Россия',
+            'name_en'   => 'Russia',
+        ]
+    ];
+
+    /**
      * API
      * @var \SxGeo
      */
@@ -37,7 +65,12 @@ class SypexGeoTool
 
         if( class_exists('DeftCMS\Engine', false) )
         {
-            $databasePath = Engine::$DT->config->item('sx.database_path');
+            $databasePath = \Engine::$DT->config->item('cms.sx.database_path');
+
+            if( $default = \Engine::$DT->config->item('cms.sx.default_location') )
+            {
+                $this->defaultCity = $default;
+            }
         }
 
         $this->_SxGeo = new \SxGeo($this->getDataBasePath($databasePath));
@@ -59,6 +92,8 @@ class SypexGeoTool
 
             if( $data = $this->_SxGeo->getCityFull($_) ) {
                 $result[] = $data;
+            } else {
+                $result[] = $this->defaultCity;
             }
 
         }
