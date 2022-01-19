@@ -77,30 +77,44 @@ class SypexGeoTool
     }
 
     /**
-     * Данные о ip-адрессе
+     * Получить информацию о ip-адресе
      *
-     * @param string|array $ipaddress
+     * @param string|array $ip_address
+     * @param bool $default
      * @return array
      */
-    public function get($ipaddress)
+    public function getArray($ip_address, $default = true)
     {
-        if( !is_array($ipaddress) ) {
-            $ipaddress = [ $ipaddress ];
+        if( !is_array($ip_address) ) {
+            $ip_address = [ $ip_address ];
         }
 
         $result = [];
 
-        foreach ($ipaddress as $_) {
+        foreach ($ip_address as $_) {
 
-            if( $data = $this->_SxGeo->getCityFull($_) ) {
-                $result[] = $data;
-            } else {
-                $result[] = $this->defaultCity;
+            if( $data = $this->get($_, $default) ) {
+                $result[$_] = $data;
             }
-
         }
 
         return $result;
+    }
+
+    /**
+     * Получить информацию о ip-адресе
+     * @param string $ip_address
+     * @param bool $default
+     *
+     * @return array|bool
+     */
+    public function get($ip_address, $default = true)
+    {
+        if( $data = $this->_SxGeo->getCityFull($ip_address) ) {
+            return $data;
+        }
+
+        return $default ? $this->defaultCity : false;
     }
 
     /**
