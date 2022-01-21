@@ -73,7 +73,7 @@ class SypexGeoTool
             }
         }
 
-        $this->_SxGeo = new \SxGeo($this->getDataBasePath($databasePath));
+        $this->_SxGeo = new SxGeoEx($this->getDataBasePath($databasePath));
     }
 
     /**
